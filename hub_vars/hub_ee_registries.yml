@@ -1,0 +1,14 @@
+# This data structure is used by multiple roles and conains key:value pairs
+# from all roles that use the ah_ee_repositories variable.
+# ee_registry
+# ee_registry_index
+# ee_registry_sync
+
+---
+ah_ee_registries: []
+  # - name: myreg
+  #   url: https://quay.io/my/registry
+  #   interval: 10
+  #   wait: true
+  #   timeout: 300
+...

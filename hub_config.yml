@@ -1,0 +1,103 @@
+---
+- name: Playbook to configure Ansible Private Automation Hub
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    absent_present: "{{ state | default('present') }}"
+
+  pre_tasks:
+    - name: "Include variables from directory"
+      ansible.builtin.include_vars:
+        dir: "{{ playbook_dir }}/hub_vars/"
+        extensions:
+          - 'yml'
+          - 'yaml'
+
+  tasks:
+    - name: "Include task for managing collections"
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.collection
+      when: ah_collections | length is not match('0')
+
+    - name: 'Include task for managing collection remotes'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.collection_remote
+      when: ah_collection_remotes | length is not match('0')
+
+    - name: 'Include task for managing collection repositories'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.collection_repository
+      when: ah_collection_repositories | length is not match('0')
+
+    - name: 'Include task for managing collection repository sync'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.collection_repository_sync
+      when:
+        - ah_collection_repositories | length is not match('0')
+        - item['wait'] is defined
+      loop: "{{ ah_collection_repositories }}"
+
+    - name: 'Include task for managing execution environment container images'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_image
+      when: ah_ee_images | length is not match('0')
+
+    - name: 'Include task for managing execution environment registries'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_registry
+      when: ah_ee_registries | length is not match('0')
+
+    - name: 'Include task for indexing execution environment registries'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_registry_index
+      when: ah_ee_registries | length is not match('0')
+
+    - name: 'Include task for syncing execution environment registries'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_registry_sync
+      when: ah_ee_registries | length is not match('0')
+
+    - name: 'Include task for managing execution environment repositories'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_repository
+      when: ah_ee_repositories | length is not match('0')
+
+    - name: 'Include task for syncing execution environment repositories'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.ee_repository_sync
+      when:
+        - ah_ee_repositories | length is not match('0')
+        - item['wait'] is defined
+      loop: "{{ ah_ee_repositories }}"
+
+    - name: 'Include task for managing Automation Hub Groups'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.groups
+      when: ah_groups | length is not match('0')
+
+    - name: 'Include task for managing Automation Hub group Roles'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.group_roles
+      when: ah_group_roles | length is not match('0')
+
+    - name: 'Include task for managing namespaces'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.namespace
+      when: ah_namespaces | length is not match('0')
+
+    - name: 'Include task for publishing collections'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.publish
+      when: ah_collections | length is not match('0')
+
+    - name: 'Include task for managing Automation Hub Roles'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.role
+      when: ah_roles | length is not match('0')
+
+    - name: 'Include task for managing Automation Hub Users'
+      ansible.builtin.include_role:
+        name: infra.ah_configuration.user
+      when: ah_users | length is not match('0')
+...

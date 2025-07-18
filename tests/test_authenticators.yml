@@ -1,0 +1,32 @@
+---
+- name: Apply Ansible Automation Platform configuration from YAML definitions
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    absent_present: "{{ state | default('present') }}"
+    which_org: ''
+    aap25_version: 4.6.6
+
+  pre_tasks:
+    - name: "Include AAP host and credential info from vault"
+      ansible.builtin.include_vars:
+        file: "../controller_vars/controller_vars.yml"
+
+    - name: Include vars for AAP 2.5 and newer
+      ansible.builtin.include_vars:
+        dir: '../controller_vars/2.5_and_newer/'
+        extensions:
+          - yml
+          - yaml
+  tasks:
+    - name: 'Include task for managing LDAP settings'
+      when: gateway_authenticators | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_authenticators
+
+    - name: 'Include task for managing LDAP mappings'
+      when: gateway_authenticators_maps | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_authenticator_maps
+...

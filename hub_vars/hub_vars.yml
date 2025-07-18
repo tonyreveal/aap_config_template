@@ -1,0 +1,9 @@
+# If populating this file with valid credentials, 
+# then this file should be vaulted before committing to your repository
+
+---
+ah_host: ''
+ah_username: ''
+ah_password: ''
+redhat_automationhub_token: ''
+...

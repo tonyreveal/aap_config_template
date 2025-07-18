@@ -1,0 +1,41 @@
+---
+- name: Apply Ansible Automation Platform configuration from YAML definitions
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    absent_present: "{{ state | default('present') }}"
+    which_org: ''
+    aap25_version: 4.6.6
+
+  pre_tasks:
+    - name: "Include AAP host and credential info from vault"
+      ansible.builtin.include_vars:
+        file: "controller_vars/controller_vars.yml"
+
+    - name: Get AAP version from API
+      register: api_version
+      ansible.builtin.uri:
+        url: "https://{{ controller_host }}/api/controller/v2/config/"
+        force_basic_auth: true
+        method: GET
+        return_content: true
+        url_password: "{{ controller_password }}"
+        url_username: "{{ controller_username }}"
+        validate_certs: "{{ controller_validate_certs }}"
+
+    - name: Set fact of AAP version returned from API
+      ansible.builtin.set_fact:
+        aap_version: "{{ api_version['json']['version'] }}"
+
+  tasks:
+    - name: Include tasks for Pre-AAP 2.5
+      when: aap_version is ansible.builtin.version(aap25_version, '<')
+      ansible.builtin.include_tasks:
+        file: pre_aap25.yml
+
+    - name: Include tasks for AAP 2.5 and newer
+      when: aap_version is ansible.builtin.version(aap25_version, '>=')
+      ansible.builtin.include_tasks:
+        file: aap25_and_newer.yml
+...

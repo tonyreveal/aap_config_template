@@ -1,0 +1,7 @@
+---
+collections:
+  - name: ansible.controller
+  - name: infra.controller_configuration
+  - name: infra.ah_configuration
+  - name: infra.aap_configuration
+...

@@ -1,0 +1,15 @@
+# Refer to https://github.com/redhat-cop/controller_configuration/tree/devel/roles/users
+# for documentation and additional parameter information
+
+---
+aap_user_accounts: []
+  # - username:
+  #   password:
+  #   email:
+  #   first_name:
+  #   last_name:
+  #   is_superuser:
+  #   authenticators:
+  #   state:
+  #   update_secrets: false
+...

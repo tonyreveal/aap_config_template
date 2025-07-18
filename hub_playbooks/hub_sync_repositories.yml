@@ -1,0 +1,36 @@
+---
+- name: 'Sync collection repositories in Automation Hub'
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  pre_tasks:
+    - name: Include vars
+      ansible.builtin.include_vars:
+        dir: "../hub_vars/"
+        extensions:
+          - 'yml'
+          - 'yaml'
+
+  tasks:
+    - name: Refresh token (prevent from expiring)
+      ansible.builtin.command:
+        cmd: >-
+          curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+          -d grant_type=refresh_token -d client_id="cloud-services"
+          -d refresh_token="{{ redhat_automationhub_token }}" --fail --silent --show-error --output /dev/null
+
+    # - name: Sync collection repositories
+    #   infra.ah_configuration.collection_repository_sync:
+    #     interval: 10
+    #     timeout: 1800
+    #     name: "{{ item }}"
+    #     wait: true
+    #     ah_host: "{{ ah_host }}"
+    #     ah_username: "{{ ah_username }}"
+    #     ah_password: "{{ ah_password }}"
+    #     validate_certs: false
+    #   loop:
+    #     - 'validated'
+    #     - 'rh-certified'
+    #     - 'community'
+...
