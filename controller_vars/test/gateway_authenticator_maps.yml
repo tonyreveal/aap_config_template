@@ -1,0 +1,10 @@
+---
+gateway_authenticator_maps: []
+  # - name: ''
+  #   authenticator: ''
+  #   map_type: 
+  #   triggers:
+  #     always
+  #   role: ''
+  #   organization: ''
+...

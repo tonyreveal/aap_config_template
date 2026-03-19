@@ -8,17 +8,23 @@
     which_org: ''
 
   pre_tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
     - name: Include vars for AAP 2.5 and newer
       ansible.builtin.include_vars:
-        file: '../controller_vars/secrets.yml'
+        file: "../controller_vars/{{ env }}/secrets.yml"
     
     - name: Include vars for gateway authenticators
       ansible.builtin.include_vars:
-        file: '../controller_vars/gateway_authenticators.yml'
+        file: "../controller_vars/{{ env }}/gateway_authenticators.yml"
     
     - name: Include vars for gateway authenticator maps
       ansible.builtin.include_vars:
-        file: '../controller_vars/gateway_authenticator_maps.yml'
+        file: "../controller_vars/{{ env }}/gateway_authenticator_maps.yml"
 
   tasks:
     - name: 'Include task for managing LDAP settings'

@@ -4,9 +4,15 @@
   connection: local
   gather_facts: false
   pre_tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
     - name: Include vaulted AAP Secrets
       ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/controller_vars/secrets.yml"
+        file: "{{ playbook_dir }}/controller_vars/{{ env }}/secrets.yml"
 
     - name: Include Automation Hub vars
       ansible.builtin.include_vars:

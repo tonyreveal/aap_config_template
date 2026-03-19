@@ -8,9 +8,15 @@
     which_org: ''
 
   pre_tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
     - name: "Include controller vars and AAP secrets"
       ansible.builtin.include_vars:
-        dir: 'controller_vars/'
+        dir: "controller_vars/{{ env }}/"
         extensions:
           - 'yml'
           - 'yaml'
@@ -141,7 +147,6 @@
         - controller_hosts | length is not match('0')
       ansible.builtin.include_role:
         name: infra.aap_configuration.controller_hosts
-      when: controller_hosts | length is not match('0')
 
     - name: 'Include task for managing host groups'
       when:
@@ -149,7 +154,6 @@
         - controller_groups | length is not match('0')
       ansible.builtin.include_role:
         name: infra.aap_configuration.controller_host_groups
-      when: controller_groups | length is not match('0')
 
     - name: 'Include task for managing notification templates'
       when:

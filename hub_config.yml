@@ -7,9 +7,15 @@
     absent_present: "{{ state | default('present') }}"
 
   pre_tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
     - name: Include vaulted AAP Secrets
       ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/controller_vars/secrets.yml"
+        file: "{{ playbook_dir }}/controller_vars/{{ env }}/secrets.yml"
 
     - name: "Include all Automation Hub variables"
       ansible.builtin.include_vars:

@@ -1,0 +1,11 @@
+# Refer to https://github.com/redhat-cop/controller_configuration/tree/devel/roles/schedules
+# for documentation and additional parameter information
+
+---
+controller_schedules: []
+  # - name: "RHEL - Weekly host patching"
+  #   enabled: true
+  #   rrule: "DTSTART;TZID=America/Chicago:20240523T060000 RRULE:INTERVAL=1;FREQ=WEEKLY;BYDAY=TH"
+  #   unified_job_template: "RHEL - Patch RHEL Hosts"
+  #   state: "{{ absent_present }}"
+...

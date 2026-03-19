@@ -1,0 +1,16 @@
+# Refer to https://github.com/redhat-cop/controller_configuration/tree/devel/roles/projects
+# for documentation and additional parameter information
+
+---
+controller_projects: []
+  # - name: ''
+  #   organization: "{{ which_org }}"
+  #   scm_branch: ''
+  #   scm_credential: ''
+  #   scm_type: ''
+  #   scm_update_on_launch: true
+  #   scm_update_cache_timeout: 3600
+  #   scm_url: ''
+  #   state: "{{ absent_present }}"
+  #   wait: true
+...

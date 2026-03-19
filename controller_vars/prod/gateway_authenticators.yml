@@ -1,0 +1,22 @@
+---
+gateway_authenticators:
+  - name: 'Some Windows Domain'
+    type: 'ansible_base.authentication.authenticator_plugins.ldap'
+    enabled: true
+    create_objects: true
+    remove_users: false
+    configuration:
+      server_uri: "{{ ldap_bind_server }}"
+      bind_dn: "{{ ldab_bind_dn }}"
+      bind_passwd: "{{ ldap_bind_passwd }}"
+      group_type: NestedMemberDNGroupType
+      group_type_params:
+        name_attr: cn
+        member_attr: member
+      group_search: "{{ ldap_group_search_settings }}"
+      user_attr_map:
+        email: mail
+        last_name: sn
+        first_name: givenName
+      user_search: "{{ ldap_user_search_settings }}"
+...

@@ -8,13 +8,19 @@
     which_org: ''
 
   pre_tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
     - name: Include vars for AAP 2.5 and newer
       ansible.builtin.include_vars:
-        file: '../controller_vars/secrets.yml'
+        file: "../controller_vars/{{ env }}/secrets.yml"
 
     - name: Include workflow definitions
       ansible.builtin.include_vars:
-        file: '../controller_vars/controller_workflows.yml'
+        file: "../controller_vars/{{ env }}/controller_workflows.yml"
 
   tasks:
     - name: 'Include task for managing workflow templates'
