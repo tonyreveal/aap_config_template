@@ -7,7 +7,11 @@
     absent_present: "{{ state | default('present') }}"
 
   pre_tasks:
-    - name: "Include variables from directory"
+    - name: Include vaulted AAP Secrets
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/controller_vars/secrets.yml"
+
+    - name: "Include all Automation Hub variables"
       ansible.builtin.include_vars:
         dir: "{{ playbook_dir }}/hub_vars/"
         extensions:
