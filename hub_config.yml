@@ -66,12 +66,14 @@
       ansible.builtin.include_role:
         name: infra.aap_configuration.hub_ee_registry_index
 
-    - name: 'Include task for syncing execution environment registries'
-      when:
-        - hub_ee_registries is defined
-        - hub_ee_registries | length is not match('0')
-      ansible.builtin.include_role:
-        name: infra.aap_configuration.ee_registry_sync
+    # Uncomment only if you want to sync all EE images from the remote registry
+    # This could consume a lot of disk space for images that may not be frequently used
+    # - name: 'Include task for syncing execution environment registries'
+    #   when:
+    #     - hub_ee_registries is defined
+    #     - hub_ee_registries | length is not match('0')
+    #   ansible.builtin.include_role:
+    #     name: infra.aap_configuration.ee_registry_sync
 
     - name: 'Include task for managing execution environment repositories'
       when:
