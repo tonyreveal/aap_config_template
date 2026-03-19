@@ -8,9 +8,13 @@
     which_org: ''
 
   pre_tasks:
-    - name: "Include AAP host and credential info from vault"
+    - name: "Include controller vars and AAP secrets"
       ansible.builtin.include_vars:
-        file: "controller_vars/controller_vars.yml"
+        dir: 'controller_vars/'
+        extensions:
+          - 'yml'
+          - 'yaml'
+          - 'json'
 
   tasks:
     - name: 'Include task for managing LDAP settings'
