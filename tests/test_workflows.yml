@@ -6,20 +6,15 @@
   vars:
     absent_present: "{{ state | default('present') }}"
     which_org: ''
-    aap25_version: 4.6.6
 
   pre_tasks:
-    - name: "Include AAP host and credential info from vault"
-      ansible.builtin.include_vars:
-        file: "controller_vars/controller_vars.yml"
-
     - name: Include vars for AAP 2.5 and newer
       ansible.builtin.include_vars:
-        file: 'controller_vars/2.5_and_newer/secrets.yml'
+        file: '../controller_vars/secrets.yml'
 
     - name: Include workflow definitions
       ansible.builtin.include_vars:
-        file: 'controller_vars/2.5_and_newer/controller_workflows.yml'
+        file: '../controller_vars/controller_workflows.yml'
 
   tasks:
     - name: 'Include task for managing workflow templates'

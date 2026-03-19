@@ -6,36 +6,179 @@
   vars:
     absent_present: "{{ state | default('present') }}"
     which_org: ''
-    aap25_version: 4.6.6
 
   pre_tasks:
     - name: "Include AAP host and credential info from vault"
       ansible.builtin.include_vars:
         file: "controller_vars/controller_vars.yml"
 
-    - name: Get AAP version from API
-      register: api_version
-      ansible.builtin.uri:
-        url: "https://{{ controller_host }}/api/controller/v2/config/"
-        force_basic_auth: true
-        method: GET
-        return_content: true
-        url_password: "{{ controller_password }}"
-        url_username: "{{ controller_username }}"
-        validate_certs: "{{ controller_validate_certs }}"
-
-    - name: Set fact of AAP version returned from API
-      ansible.builtin.set_fact:
-        aap_version: "{{ api_version['json']['version'] }}"
-
   tasks:
-    - name: Include tasks for Pre-AAP 2.5
-      when: aap_version is ansible.builtin.version(aap25_version, '<')
-      ansible.builtin.include_tasks:
-        file: pre_aap25.yml
+    - name: 'Include task for managing LDAP settings'
+      when:
+        - gateway_authenticators is defined
+        - gateway_authenticators | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_authenticators
 
-    - name: Include tasks for AAP 2.5 and newer
-      when: aap_version is ansible.builtin.version(aap25_version, '>=')
-      ansible.builtin.include_tasks:
-        file: aap25_and_newer.yml
+    - name: 'Include task for managing LDAP mappings'
+      when:
+        - gateway_authenticators_maps is defined
+        - gateway_authenticators_maps | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_authenticator_maps
+
+    - name: 'Include task for managing instance groups'
+      when:
+        - controller_instance_groups is defined
+        - controller_instance_groups | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_instance_groups
+
+    - name: 'Include task for managing credential types'
+      when:
+        - controller_credential_types is defined
+        - controller_credential_types | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_credential_types
+
+    - name: 'Include task for managing organizations'
+      vars:
+        assign_galaxy_credentials_to_org: false
+      when:
+        - aap_organizations is defined
+        - aap_organizations | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_organizations
+
+    - name: 'Include task for managing users'
+      when:
+        - aap_user_accounts is defined
+        - aap_user_accounts | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_users
+
+    - name: 'Include task for managing teams'
+      when:
+        - aap_teams is defined
+        - aap_teams | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_teams
+
+    - name: 'Include task for managing credentials'
+      when:
+        - controller_credentials is defined
+        - controller_credentials | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_credentials
+
+    - name: 'Include task for managing credential input sources'
+      when:
+        - controller_credential_input_sources is defined
+        - controller_credential_input_sources | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_credential_input_sources
+
+    - name: 'Include task to associate Hub credentials to Organizations'
+      vars:
+        assign_galaxy_credentials_to_org: true
+      when:
+        - aap_organizations is defined
+        - aap_organizations | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.organizations
+
+    - name: 'Include task for manging execution environments'
+      when:
+        - controller_execution_environments is defined
+        - controller_execution_environments | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_execution_environments
+
+    - name: 'Include task for managing projects'
+      vars:
+        aap_configuration_async_delay: 15
+      when:
+        - controller_projects is defined
+        - controller_projects | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_projects
+
+    - name: 'Include task for managing labels'
+      when:
+        - controller_labels is defined
+        - controller_labels | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_labels
+
+    - name: 'Include task for managing inventories'
+      when:
+        - controller_inventories is defined
+        - controller_inventories | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_inventories
+
+    - name: 'Include task for managing inventory sources'
+      when:
+        - controller_inventory_sources is defined
+        - controller_inventory_sources | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_inventory_sources
+
+    - name: 'Include tasks to Sync inventory sources'
+      when:
+        - controller_inventory_sources is defined
+        - controller_inventory_sources | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_inventory_source_update
+
+    - name: 'Include task for managing hosts'
+      when:
+        - controller_hosts is defined
+        - controller_hosts | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_hosts
+      when: controller_hosts | length is not match('0')
+
+    - name: 'Include task for managing host groups'
+      when:
+        - controller_groups is defined
+        - controller_groups | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_host_groups
+      when: controller_groups | length is not match('0')
+
+    - name: 'Include task for managing notification templates'
+      when:
+        - controller_notifications is defined
+        - controller_notifications | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_notification_templates
+
+    - name: 'Include task for managing job templates'
+      when:
+        - controller_templates is defined
+        - controller_templates | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_job_templates
+
+    - name: 'Include task for managing workflow templates'
+      when:
+        - controller_workflows is defined
+        - controller_workflows | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_workflow_job_templates
+
+    - name: 'Include task for managing schedules'
+      when:
+        - controller_schedules is defined
+        - controller_schedules | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_schedules
+
+    - name: 'Include task for managing roles'
+      when:
+        - controller_roles is defined
+        - controller_roles | length is not match('0')
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_roles
 ...

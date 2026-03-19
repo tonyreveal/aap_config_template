@@ -1,23 +1,26 @@
 # This data structure is used by multiple roles and conains key:value pairs
-# from all roles that use the ah_ee_repositories variable.
+# from all roles that use the hub_ee_repositories variable.
 # collection_repository
 # collection_repository_sync
 
 ---
-ah_collection_repositories:
+hub_collection_repositories:
   - name: 'validated'
     distribution:
       name: 'validated'
       state: 'present'
-    remote: 'validated'
+    remote: 'rh-validated'
+    wait: false
   - name: 'rh-certified'
     distribution:
       name: 'rh-certified'
       state: 'present'
     remote: 'rh-certified'
+    wait: false
   - name: 'community'
     distribution:
       name: 'community'
       state: 'present'
     remote: 'community'
+    wait: false
 ...

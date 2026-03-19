@@ -1,5 +1,5 @@
 ---
-ah_collection_remotes:
+hub_collection_remotes:
   - name: 'community'
     url: 'https://galaxy.ansible.com/api/'
     requirements:
@@ -7,7 +7,7 @@ ah_collection_remotes:
         version: '>=4.0.4'
       - name: 'infra.aap_configuration'
         version: '>=3.4.1'
-      - name: 'infra.ah_configuration'
+      - name: 'infra.hub_configuration'
         version: '>=2.1.0'
       - name: 'community.general'
         version: '>=11.1.0'

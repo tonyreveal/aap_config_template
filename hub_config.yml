@@ -16,88 +16,104 @@
 
   tasks:
     - name: "Include task for managing collections"
+      when:
+        - hub_collections is defined
+        - hub_collections | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.collection
-      when: ah_collections | length is not match('0')
+        name: infra.aap_configuration.hub_collection
 
     - name: 'Include task for managing collection remotes'
+      when:
+        - hub_collection_remotes is defined
+        - hub_collection_remotes | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.collection_remote
-      when: ah_collection_remotes | length is not match('0')
+        name: infra.aap_configuration.hub_collection_remote
 
     - name: 'Include task for managing collection repositories'
+      when:
+        - hub_collection_repositories is defined
+        - hub_collection_repositories | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.collection_repository
-      when: ah_collection_repositories | length is not match('0')
+        name: infra.aap_configuration.hub_collection_repository
 
     - name: 'Include task for managing collection repository sync'
-      ansible.builtin.include_role:
-        name: infra.ah_configuration.collection_repository_sync
       when:
-        - ah_collection_repositories | length is not match('0')
+        - hub_collection_repositories is defined
+        - hub_collection_repositories | length is not match('0')
         - item['wait'] is defined
-      loop: "{{ ah_collection_repositories }}"
+      loop: "{{ hub_collection_repositories }}"
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.hub_collection_repository_sync
 
     - name: 'Include task for managing execution environment container images'
+      when:
+        - hub_ee_images is defined
+        - hub_ee_images | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_image
-      when: ah_ee_images | length is not match('0')
+        name: infra.aap_configuration.hub_ee_image
 
     - name: 'Include task for managing execution environment registries'
+      when:
+        - hub_ee_registries is defined
+        - hub_ee_registries | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_registry
-      when: ah_ee_registries | length is not match('0')
+        name: infra.aap_configuration.hub_ee_registry
 
     - name: 'Include task for indexing execution environment registries'
+      when:
+        - hub_ee_registries is defined
+        - hub_ee_registries | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_registry_index
-      when: ah_ee_registries | length is not match('0')
+        name: infra.aap_configuration.hub_ee_registry_index
 
     - name: 'Include task for syncing execution environment registries'
+      when:
+        - hub_ee_registries is defined
+        - hub_ee_registries | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_registry_sync
-      when: ah_ee_registries | length is not match('0')
+        name: infra.aap_configuration.ee_registry_sync
 
     - name: 'Include task for managing execution environment repositories'
+      when:
+        - hub_ee_repositories is defined
+        - hub_ee_repositories | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_repository
-      when: ah_ee_repositories | length is not match('0')
+        name: infra.aap_configuration.hub_ee_repository
 
     - name: 'Include task for syncing execution environment repositories'
-      ansible.builtin.include_role:
-        name: infra.ah_configuration.ee_repository_sync
       when:
-        - ah_ee_repositories | length is not match('0')
+        - hub_ee_repositories is defined
+        - hub_ee_repositories | length is not match('0')
         - item['wait'] is defined
-      loop: "{{ ah_ee_repositories }}"
-
-    - name: 'Include task for managing Automation Hub Groups'
+      loop: "{{ hub_ee_repositories }}"
       ansible.builtin.include_role:
-        name: infra.ah_configuration.groups
-      when: ah_groups | length is not match('0')
+        name: infra.aap_configuration.hub_ee_repository_sync
 
     - name: 'Include task for managing Automation Hub group Roles'
+      when:
+        - hub_roles is defined
+        - hub_group_roles | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.group_roles
-      when: ah_group_roles | length is not match('0')
+        name: infra.aap_configuration.group_roles
 
     - name: 'Include task for managing namespaces'
+      when:
+        - hub_namespaces is defined
+        - hub_namespaces | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.namespace
-      when: ah_namespaces | length is not match('0')
+        name: infra.aap_configuration.hub_namespace
 
     - name: 'Include task for publishing collections'
+      when:
+        - hub_collection_list is defined
+        - hub_collection_list | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.publish
-      when: ah_collections | length is not match('0')
+        name: infra.aap_configuration.hub_publish
 
     - name: 'Include task for managing Automation Hub Roles'
+      when:
+        - hub_roles is defined
+        - hub_roles | length is not match('0')
       ansible.builtin.include_role:
-        name: infra.ah_configuration.role
-      when: ah_roles | length is not match('0')
-
-    - name: 'Include task for managing Automation Hub Users'
-      ansible.builtin.include_role:
-        name: infra.ah_configuration.user
-      when: ah_users | length is not match('0')
+        name: infra.aap_configuration.hub_role
 ...

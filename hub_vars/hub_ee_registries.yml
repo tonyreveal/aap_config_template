@@ -1,14 +1,15 @@
 # This data structure is used by multiple roles and conains key:value pairs
-# from all roles that use the ah_ee_repositories variable.
+# from all roles that use the hub_ee_repositories variable.
 # ee_registry
 # ee_registry_index
 # ee_registry_sync
 
 ---
-ah_ee_registries: []
-  # - name: myreg
-  #   url: https://quay.io/my/registry
-  #   interval: 10
-  #   wait: true
-  #   timeout: 300
+hub_ee_registries:
+  - name: Red Hat Registry'
+    url: https://registry.redhat.io
+    username: "{{ redhat_registry_username }}"
+    password: "{{ redhat_registry_password }}"
+    index: true
 ...
+

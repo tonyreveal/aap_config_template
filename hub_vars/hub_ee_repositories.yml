@@ -1,10 +1,10 @@
 # This data structure is used by multiple roles and conains key:value pairs
-# from all roles that use the ah_ee_repositories variable.
+# from all roles that use the hub_ee_repositories variable.
 # ee_repository
 # ee_repository_sync
 
 ---
-ah_ee_repositories: []
+hub_ee_repositories: []
   # - name: abc15
   #   description: string
   #   readme: "# My ee repo"
