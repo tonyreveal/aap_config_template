@@ -1,7 +1,9 @@
 Controller Configuration
 =========
 
-A single playbook and multiple vars files which can be used to define your Automation Platform configuration as code.  Update the vars files to define your objects and run the playbook to deploy your changes to your AAP 2.5 or newer cluster(s).
+A single playbook and multiple vars files which can be used to define your Automation Platform configuration as code.  Update the vars files to define your objects and run the playbook to deploy your changes to your AAP 2.5 or newer cluster(s).  To run the playbook you do need to provide an extra var for the environment you wish to run against (dev, test, or prod).  See playbook execution.
+
+It is strongly encouraged that you vault all secrets.yml files with ansible-vault before you push them to a repository.
 
 Requirements
 ------------
@@ -13,7 +15,7 @@ You will also need Automation Platform credentials with sufficient permissions t
 Variables
 --------------
 
-`controller_config.yml`:
+`platform_config.yml`:
 
     absent_present
 
@@ -24,6 +26,29 @@ Variables
         You can update `which_org` to specify your org within the cluster and create all objects in your organization.  If you do not wish to use `which_org`, for example if you plan to use a single repository to create objects in AAP across multiple organizations, then you will have to hard code the organization for each individual object replacing the variable `"{{ which_org }}"` with the organization name.
 
 `secrets.yml`:
+
+    ldap_bind_server: ''
+    ldab_bind_dn: ''
+    ldap_bind_passwd: "{{ aap_password }}"
+    ldap_group_search_settings:
+    - some_group_search_path
+    - SCOPE_SUBTREE
+    - (objectClass=group)
+    ldap_user_search_settings:
+    - some_user_search_path
+    - SCOPE_SUBTREE
+    - (sAMAccountName=%(user)s)
+    aap_hostname: ''
+    aap_username: ''
+    aap_password: ''
+    automationhub_token: ''
+    hub_published_url: "https://{{ aap_hostname }}/api/galaxy/"
+    hub_community_url: "https://{{ aap_hostname }}/api/galaxy/content/community/"
+    hub_certified_url: "https://{{ aap_hostname }}/api/galaxy/content/rh-certified/"
+    hub_validated_url: "https://{{ aap_hostname }}/api/galaxy/content/validated/"
+    redhat_automationhub_token: ''
+    redhat_registry_username: ''
+    redhat_registry_password: ''
 
 Dependencies
 ------------
@@ -39,15 +64,11 @@ Collections needed (install using the included collections/requirements.yml)
 Playbook Execution
 ----------------
 
-You can run this playbook from ansible cli or as a Job Template in Tower / Controller.
+You can run this playbook from ansible cli or as a Job Template in Automation Platform.
 
-From the command line to define all objects:
+Update the vault file in the appropriate environment's directory.  Then run the playbook with:
 
-    ansible-playbook controller_config.yml --tags alltags
-
-    or just to create new job templates:
-
-    ansible-playbook controller_config.yaml --tags jobtemplates
+    ansible-playbook platform_config.yml -e env=prod
 
 License
 -------
@@ -57,4 +78,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+[Tony Reveal](https://github.com/tonyreveal)

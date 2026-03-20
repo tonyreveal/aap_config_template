@@ -1,0 +1,4 @@
+---
+import_playbook: hub_config.yml
+import_playbook: controller_config.yml
+...
