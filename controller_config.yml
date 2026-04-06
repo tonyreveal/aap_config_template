@@ -1,5 +1,5 @@
 ---
-- name: Apply Ansible Automation Platform configuration from YAML definitions
+- name: Apply Automation Controller configuration from YAML definitions
   hosts: localhost
   connection: local
   gather_facts: false

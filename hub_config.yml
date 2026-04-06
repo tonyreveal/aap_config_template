@@ -55,6 +55,21 @@
       ansible.builtin.include_role:
         name: infra.aap_configuration.hub_collection_repository_sync
 
+    - name: Get Automation Hub tasks
+      register: hub_task_results
+      ansible.builtin.uri:
+        url: "https://{{ aap_hostname }}/api/galaxy/pulp/api/v3/tasks/"
+        return_content: true
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+    
+    # I'm not sure if this will work properly.  It depends on how quickly
+    # child tasks get started.  This could end up as the API endpoint for
+    # a child task instead of the parent task (race condition).
+    - name: Set stat of task URL from pulp_href of parent task
+      ansible.builtin.set_stats:
+        hub_task_url: "https://{{ aap_hostname }}{{ hub_task_results['results'][0]['pulp_href'] }}"
+
     - name: 'Include task for managing execution environment container images'
       when:
         - hub_ee_images is defined

@@ -1,4 +1,4 @@
-# Refer to https://github.com/redhat-cop/controller_configuration/tree/devel/roles/hosts
+# Refer to https://github.com/redhat-cop/infra.aap_configuration/tree/devel/roles/controller_hosts
 # for documentation and additional parameter information
 
 ---

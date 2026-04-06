@@ -1,0 +1,9 @@
+# Refer to https://github.com/redhat-cop/infra.aap_configuration/tree/devel/roles/controller_settings
+# for documentation and additional parameter information
+
+controller_settings: []
+  # - settings:
+  #     AWX_TASK_ENV:
+  #       GIT_SSL_NO_VERIFY: 'true'
+  #     GALAXY_IGNORE_CERTS: true
+...

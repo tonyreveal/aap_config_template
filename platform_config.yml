@@ -1,4 +1,33 @@
 ---
-import_playbook: hub_config.yml
-import_playbook: controller_config.yml
+- name: Apply Ansible Automation Platform configuration from YAML definitions
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Verify environment variable provided
+      ansible.builtin.assert:
+        that: 
+          - env is defined
+          - env == 'dev' or env == 'test' or env == 'prod'
+
+- import_playbook: hub_config.yml
+
+- name: Wait for collections to sync
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    # Need to test this.  hub_task_url comes from hub_config playbook
+    # immediately after starting the collection sync. However I'm not
+    # sure it's getting set to the correct task's api endpoint
+    - name: Wait until collection sync status is completed
+      register: hub_task_results
+      until: hub_task_results['state'] != 'running'
+      ansible.builtin.uri:
+        url: "{{ hub_task_url }}"
+        return_content: true
+        user: "{{ aap_username }}"
+        password: "{{ aap_password }}"
+
+- import_playbook: controller_config.yml
 ...

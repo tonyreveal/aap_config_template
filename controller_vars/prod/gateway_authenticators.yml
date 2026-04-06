@@ -1,3 +1,6 @@
+# Refer to https://github.com/redhat-cop/infra.aap_configuration/tree/devel/roles/gateway_authenticators
+# for documentation and additional parameter information
+
 ---
 gateway_authenticators:
   - name: 'Some Windows Domain'
