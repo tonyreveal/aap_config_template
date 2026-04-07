@@ -6,7 +6,7 @@
 
 ---
 hub_ee_registries:
-  - name: Red Hat Registry'
+  - name: 'Red Hat Registry'
     url: https://registry.redhat.io
     username: "{{ redhat_registry_username }}"
     password: "{{ redhat_registry_password }}"
