@@ -1,0 +1,7 @@
+# Refer to https://github.com/redhat-cop/infra.aap_configuration/tree/devel/roles/gateway_settings
+# for documentation and additional parameter information
+
+---
+gateway_settings:
+  ALLOW_OAUTH2_FOR_EXTERNAL_USERS: true
+...

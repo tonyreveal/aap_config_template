@@ -30,6 +30,12 @@
       ansible.builtin.include_role:
         name: infra.aap_configuration.gateway_authenticators
 
+    - name: 'Include task for managing Gateway settings'
+      when:
+        - gateway_settings is defined
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.gateway_settings
+
     - name: 'Include task for managing LDAP mappings'
       when:
         - gateway_authenticators_maps is defined
